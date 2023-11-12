@@ -206,8 +206,8 @@ LPSolver::Status LPSolver::minimize() {
         {
             DVectorReal dvec_primal(nb_vars());
             DVectorReal dvec_dual(nb_rows());
-            mysoplex->getPrimalReal(dvec_primal);
-            mysoplex->getDualReal(dvec_dual);
+            mysoplex->getPrimalReal(dvec_primal.get_ptr(),dvec_primal.dim());
+            mysoplex->getDualReal(dvec_dual.get_ptr(),dvec_dual.dim());
             obj_ = mysoplex->objValueReal();
 
             uncertified_dual_ = dvec2ivec(dvec_dual);
@@ -232,7 +232,7 @@ LPSolver::Status LPSolver::minimize() {
         {
             status_ = LPSolver::Status::Infeasible;
             DVectorReal dual_farkas(nb_rows());
-            bool b = mysoplex->getDualFarkasReal(dual_farkas);
+            bool b = mysoplex->getDualFarkasReal(dual_farkas.get_ptr(),dual_farkas.dim());
             if(b) {
                 uncertified_infeasible_dir_ = dvec2ivec(dual_farkas);
                 has_infeasible_dir_ = true;
